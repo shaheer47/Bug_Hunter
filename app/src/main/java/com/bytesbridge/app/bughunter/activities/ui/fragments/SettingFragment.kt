@@ -10,17 +10,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import com.bytesbridge.app.bughunter.activities.ui.activities.LoginActivity
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
+import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
 import com.bytesbridge.app.bughunter.activities.utils.PaperDbUtils.Companion.user
+import com.bytesbridge.app.bughunter.activities.utils.SnackbarUtil.Companion.showSnackBar
 import com.bytesbridge.app.bughunter.databinding.FragmentSettingBinding
 import com.github.drjacky.imagepicker.ImagePicker
+import java.io.File
 
 
 class SettingFragment : Fragment() {
     lateinit var binding: FragmentSettingBinding
     var user: UserModel? = null
     private lateinit var launcher: ActivityResultLauncher<Intent>
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +44,19 @@ class SettingFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { data ->
                 if (data.resultCode == Activity.RESULT_OK) {
                     val uri = data.data?.data!!
+                    mainViewModel.upLoadImage(user?.userId.toString(),uri) {
+                        if (it) {
+                            showSnackBar(binding.root, "Upload Successful")
+                        } else {
+                            showSnackBar(binding.root, "Upload Failed")
+                        }
+
+                    }
 
                 }
+
             }
+
     }
 
     private fun initClickListeners() {

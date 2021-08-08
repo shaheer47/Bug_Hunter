@@ -164,9 +164,9 @@ class Repository
     }
 
     //---------------- Auth ----------------//
-    fun uploadImageToFirebase(uId: String, file: File, success: (success: Boolean) -> Unit) {
+    fun uploadImageToFirebase(uId: String, file: Uri, success: (success: Boolean) -> Unit) {
         val storageRef: StorageReference = fireStorage.reference.child("$uId.jpg")
-        var task: UploadTask = storageRef.putFile(Uri.fromFile(file))
+        var task: UploadTask = storageRef.putFile(file)
 
 
         val urlTask = task.continueWithTask { _task ->
@@ -191,8 +191,9 @@ class Repository
     }
 
     private fun addUserImage(downloadUri: Uri, uId: String) {
+        Log.e("TAG", "addUserImage: "+downloadUri.toString(), )
         dbFireStore.collection(PATH_FIREBASE_USERS).document(uId)
-            .update(FIREBASE_USER_IMAGE, downloadUri)
+            .update(FIREBASE_USER_IMAGE, downloadUri.toString())
     }
 
     fun registerUser(

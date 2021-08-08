@@ -1,6 +1,7 @@
 package com.bytesbridge.app.bughunter.activities.ui.viewmodels
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.AnswerModel
@@ -111,7 +112,7 @@ class MainViewModel
             function()
         }
     }
-    fun upLoadImage(uid:String,file:File,success:(success:Boolean)->Unit){
+    fun upLoadImage(uid:String, file: Uri, success:(success:Boolean)->Unit){
         repository.uploadImageToFirebase(uid,file,success)
     }
    
