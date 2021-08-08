@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "623413553170",
+    "project_id": "bug-hunter-db59e",
+    "storage_bucket": "bug-hunter-db59e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623413553170:android:dfef967b76e81f68c490cb",
+        "android_client_info": {
+          "package_name": "com.bytesbridge.app.bughunter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "623413553170-q8bdp7kc7rtfr1gcsflj9o9pofnaqhvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2613fWFjCNGSpfASMhgioS1IGFZ9QBlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "623413553170-q8bdp7kc7rtfr1gcsflj9o9pofnaqhvj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

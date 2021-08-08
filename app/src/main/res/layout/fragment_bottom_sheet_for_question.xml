@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ui.fragments.BottomSheetForQuestionFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <io.github.florent37.shapeofview.shapes.RoundRectView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shape_roundRect_topRightRadius="@dimen/_10sdp"
+            app:shape_roundRect_topLeftRadius="@dimen/_10sdp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rl_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_16sdp">
+
+                    <ImageView
+                        android:id="@+id/img_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_close_24" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        app:cardBackgroundColor="@color/primary"
+                        app:cardCornerRadius="@dimen/_8sdp"
+                        tools:ignore="RelativeOverlap">
+
+                        <TextView
+                            android:id="@+id/tv_send_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/_16sdp"
+                            android:paddingTop="@dimen/_8sdp"
+                            android:paddingEnd="@dimen/_16sdp"
+                            android:paddingBottom="@dimen/_8sdp"
+                            android:text="@string/send"
+                            android:textStyle="bold" />
+                    </com.google.android.material.card.MaterialCardView>
+                </RelativeLayout>
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/ll_sub_header"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@+id/rl_header"-->
+<!--                    android:layout_marginStart="@dimen/_16sdp"-->
+<!--                    android:layout_marginEnd="@dimen/_16sdp"-->
+<!--                    android:baselineAligned="false"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:weightSum="1">-->
+
+<!--                    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                        android:id="@+id/img_profile"-->
+<!--                        android:layout_width="60dp"-->
+<!--                        android:layout_height="60dp"-->
+<!--                        android:src="@drawable/ic_baseline_person_24" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/txt_name"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_marginStart="@dimen/_8sdp"-->
+<!--                        android:text="@string/name"-->
+<!--                        android:textSize="20sp" />-->
+<!--                </LinearLayout>-->
+
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/rl_header"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_hunter_coins"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/LightPurple"
+                            android:elevation="0dp"
+                            app:boxBackgroundMode="none"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_hunter_coins"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:completionThreshold="0"
+                                android:hint="@string/offer_hunter_coins"
+                                android:inputType="number"
+                                android:padding="@dimen/_16sdp"
+                                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/VeryLightGrey"
+                            android:elevation="0dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxBackgroundMode="none"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_question_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:completionThreshold="0"
+                                android:hint="@string/question_title"
+                                android:maxLength="330"
+                                android:padding="@dimen/_16sdp"
+                                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_16sdp"
+                            android:layout_marginEnd="20dp"
+                            android:elevation="0dp"
+                            app:boxBackgroundColor="@color/white"
+                            app:boxBackgroundMode="none"
+                            app:hintEnabled="false">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/et_question_description"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:completionThreshold="0"
+                                android:hint="@string/ask_question"
+                                android:padding="@dimen/_16sdp"
+                                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </ScrollView>
+
+                       </RelativeLayout>
+        </io.github.florent37.shapeofview.shapes.RoundRectView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

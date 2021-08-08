@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_questionsFragment"
+            app:destination="@id/questionsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_answersListFragment"
+            app:destination="@id/answersListFragment">
+            <argument
+                android:name="question"
+                app:argType="com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel"
+                app:nullable="false" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_StackOverflowAnswersListFragment"
+            app:destination="@id/StackOverflowAnswersListFragment">
+            <argument
+                android:name="question"
+                app:argType="com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestions"
+                app:nullable="false" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/StackOverflowAnswersListFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.StackOverflowAnswersListFragment"
+        android:label="StackOverflowAnswersListFragment" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+
+    <fragment
+        android:id="@+id/answersListFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.AnswersListFragment"
+        android:label="StackOverflowAnswersListFragment">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/questionsFragment"
+        android:name="com.bytesbridge.app.bughunter.activities.ui.fragments.QuestionsFragment"
+        android:label="QuestionsFragment">
+        <action
+            android:id="@+id/action_questionsFragment_to_answersListFragment"
+            app:destination="@id/answersListFragment" />
+    </fragment>
+
+</navigation>
