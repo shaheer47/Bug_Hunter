@@ -34,7 +34,7 @@ class QuestionsAdapter(questions: List<QuestionModel>, var onClick: (item: Quest
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val items = questionsList[position]
         holder.binding.apply {
-//            Glide.with(root.context).load(items.owner.profile_image).into(image)
+            Glide.with(root.context).load(items.question_user_photo).into(image)
             tvName.text = items.question_user_name
             tvDate.text = PrettyTimeAgo.getTimeAgo(items.created_at.toLong())
 

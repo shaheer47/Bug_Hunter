@@ -129,7 +129,8 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
                 user?.userId!!,
                 0,
                 "",
-                user?.userName!!
+                user?.userName!!,
+                user?.user_photo!!
 
             )
         sendQuestion(questionModel)

@@ -6,9 +6,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bytesbridge.app.bughunter.activities.networking.RetrofitInstance
 import com.bytesbridge.app.bughunter.activities.ui.data.models.*
-import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.SearchResponse
-import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowAnswersResponse
-import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestionResponse
+import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.*
 import com.bytesbridge.app.bughunter.activities.utils.Constants
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.CONTAINS_STACKOVERFLOW_LINK
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_ANSWER_ID
@@ -19,6 +17,7 @@ import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBA
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_NUMBER_OF_SUCCESSFUL_HUNTS
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_QUESTIONS_VIEW
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_QUESTION_ID
+import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_QUESTION_TITLE_FOR_SEARCH
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_USER_ID
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.FIREBASE_USER_IMAGE
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.PATH_FIREBASE_ANSWERS
@@ -40,7 +39,6 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.File
 
 
 class Repository
@@ -118,10 +116,20 @@ class Repository
                         call: Call<StackOverflowQuestionResponse>,
                         questionResponse: Response<StackOverflowQuestionResponse>
                     ) {
-                        if (questionResponse.isSuccessful && questionResponse.code() == 200) {
-                            response(questionResponse.body())
-                        } else {
-                            response(null)
+                        if (questionResponse.isSuccessful && questionResponse.body() != null) {
+                            val response_: StackOverflowQuestionResponse = questionResponse.body()!!
+                            if (questionResponse.isSuccessful && questionResponse.code() == 200) {
+                                getQuestionFromFirestoreWithTitle(title) { listOfQuestion ->
+                                    listOfQuestion?.let {
+                                        response_.items = it
+                                        response(questionResponse.body())
+                                    } ?: run {
+                                        response(questionResponse.body())
+                                    }
+                                }
+                            } else {
+                                response(null)
+                            }
                         }
                     }
 
@@ -191,7 +199,7 @@ class Repository
     }
 
     private fun addUserImage(downloadUri: Uri, uId: String) {
-        Log.e("TAG", "addUserImage: "+downloadUri.toString(), )
+        Log.e("TAG", "addUserImage: " + downloadUri.toString())
         dbFireStore.collection(PATH_FIREBASE_USERS).document(uId)
             .update(FIREBASE_USER_IMAGE, downloadUri.toString())
     }
@@ -213,6 +221,7 @@ class Repository
                                 0,
                                 0,
                                 100,
+                                "",
                                 0,
                                 System.currentTimeMillis().toString(),
                                 System.currentTimeMillis().toString()
@@ -365,6 +374,7 @@ class Repository
                         }
                     coroutineScope.launch {
                         increaseNumberOfQuestionAsked(question.user_id)
+                        increaseNumberOfAnswerToQuestion(question.question_id)
                         addQuestionToFireBase(question)
                         {
                             message(it)
@@ -378,13 +388,13 @@ class Repository
     }
 
     fun submitAnswer(_answer: AnswerModel, message: (msg: String) -> Unit) {
-        var question = _answer
+        var answer = _answer
         val firebaseUser = firebaseAuth?.currentUser
         firebaseUser
             ?.let {
-                dbFireStore.collection(PATH_FIREBASE_ANSWERS).document().set(question)
+                dbFireStore.collection(PATH_FIREBASE_ANSWERS).document().set(answer)
                     .addOnSuccessListener {
-                        increaseNumberOfAnswer(firebaseUser.uid)
+                        increaseNumberOfAnswerByUser(firebaseUser.uid)
                         message("Answer Added Successfully")
                     }
                     .addOnFailureListener {
@@ -396,9 +406,27 @@ class Repository
             }
     }
 
-    private fun increaseNumberOfAnswer(uid: String) {
+
+    private fun increaseNumberOfAnswerByUser(uid: String) {
         dbFireStore.collection(PATH_FIREBASE_USERS).document(uid)
             .update(FIREBASE_NUMBER_OF_ANSWERS, FieldValue.increment(1))
+    }
+
+    private fun increaseNumberOfAnswerToQuestion(questionId: String) {
+        var question: QuestionModel = QuestionModel()
+        dbFireStore.collection(PATH_FIREBASE_QUESTIONS)
+            .whereEqualTo(FIREBASE_QUESTION_ID, questionId)
+            .get().addOnSuccessListener { documents ->
+                for (doc in documents) {
+                    question = doc.toObject(QuestionModel::class.java)
+                    if (question.question_id == questionId) {
+                        increaseNumberOfAnswerToQuestion(doc.id)
+                    }
+                }
+            }
+            .addOnFailureListener {
+
+            }
     }
 
     private fun increaseNumberOfQuestionAsked(uid: String) {
@@ -426,9 +454,56 @@ class Repository
         PaperDbUtils.user(context, saveCurrentUserData)
 
     //save user data
-    //get user data
+//get user data
     fun getUserDataLocally(context: Context, userData: (saveCurrentUserData: UserModel?) -> Unit) {
         userData(PaperDbUtils.user(context))
+    }
+
+
+    private fun getQuestionFromFirestoreWithTitle(
+        title: String,
+        response: (stackOverflowQuestions: ArrayList<StackOverflowQuestions>?) -> Unit
+    ) {
+        dbFireStore.collection(PATH_FIREBASE_QUESTIONS)
+            .whereEqualTo(FIREBASE_QUESTION_TITLE_FOR_SEARCH, title).get()
+            .addOnSuccessListener {
+                val stackOverflowQuestions: ArrayList<StackOverflowQuestions> = ArrayList()
+                for (doc in it) {
+                    val question = doc.toObject(QuestionModel::class.java)
+                    val owner = Owner(
+                        question.user_id.toInt(),
+                        0,
+                        question.user_id.toInt(),
+                        "",
+                        0,
+                        question.question_user_photo,
+                        question.question_user_name,
+                        ""
+                    )
+                    stackOverflowQuestions.add(
+                        StackOverflowQuestions(
+                            emptyList(),
+                            owner,
+                            true,
+                            question.views.toInt(),
+                            0,
+                            question.number_of_answers.toInt(),
+                            0,
+                            0,
+                            question.question_detail,
+                            question.created_at.toInt(),
+                            question.updated_at.toInt(),
+                            question.question_id.toInt(),
+                            "",
+                            "",
+                            question.question_title,
+                            1,
+                            question.hunter_coins_offer
+                        )
+                    )
+                }
+                response(stackOverflowQuestions)
+            }
     }
 
     //---------------- Auth ----------------//

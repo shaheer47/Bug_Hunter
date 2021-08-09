@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.adapters.AnswersAdapter
 import com.bytesbridge.app.bughunter.activities.ui.data.models.AnswerModel
@@ -46,6 +47,8 @@ class AnswersListFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
         initClickListener()
         setUpRecycleView()
         getAnswers()
+        setUpSwipeToRefreshListener()
+
         return binding.root
     }
 
@@ -134,19 +137,10 @@ class AnswersListFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
             tvViewsCount.text = question.views.toString()
             tvDescription.text = question.question_detail
             tvHunterPoints.text = question.hunter_coins_offer.toString()
+            Glide.with(root.context).load(question.question_user_photo).into(image)
         }
     }
 
-
-    companion object {
-        fun newInstance(questionModel: QuestionModel) =
-            AnswersListFragment().apply {
-                arguments = Bundle().apply {
-                    putSerializable(Question, questionModel)
-                }
-                return this
-            }
-    }
 
     private fun setUpSwipeToRefreshListener() {
         binding.swipeToRefresh.setOnRefreshListener {

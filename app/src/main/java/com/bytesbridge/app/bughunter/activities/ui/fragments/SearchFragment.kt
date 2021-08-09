@@ -4,23 +4,21 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.adapters.StackOverflowQuestionsAdapter
+import com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestionResponse
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
-import com.bytesbridge.app.bughunter.activities.utils.Constants
 import com.bytesbridge.app.bughunter.databinding.FragmentSearchBinding
 import com.github.drjacky.imagepicker.ImagePicker
 import com.google.mlkit.vision.common.InputImage
@@ -118,12 +116,37 @@ class SearchFragment : Fragment() {
         binding.rvQuestions.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.rvQuestions.adapter =
-            StackOverflowQuestionsAdapter(questionResponse.items) { stachOverflowQuestion ->
+            StackOverflowQuestionsAdapter(questionResponse.items) { stackOverflowQuestion ->
+                var action: NavDirections? = null
+                if (stackOverflowQuestion.type == 0) {
+                    action =
+                        SearchFragmentDirections.actionSearchFragmentToStackOverflowAnswersListFragment(
+                            stackOverflowQuestion
+                        )
+                } else {
+                    var question: QuestionModel
+                    stackOverflowQuestion.apply {
+                        question = QuestionModel(
+                            question_id.toString(),
+                            answer_count.toString(),
+                            title,
+                            description,
+                            coins_offer,
+                            creation_date.toString(),
+                            last_activity_date.toString(),
+                            owner.user_id.toString(),
+                            view_count.toLong(),
+                            title,
+                            owner.display_name,
+                            owner.profile_image
+                        )
 
-                val action =
-                    SearchFragmentDirections.actionSearchFragmentToStackOverflowAnswersListFragment(
-                        stachOverflowQuestion
+                    }
+                    action = SearchFragmentDirections.actionSearchFragmentToAnswersListFragment(
+                        question
                     )
+
+                }
                 findNavController().navigate(action)
 
 

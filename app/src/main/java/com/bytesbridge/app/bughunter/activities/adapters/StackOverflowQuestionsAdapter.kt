@@ -11,7 +11,7 @@ import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestions
 import com.bytesbridge.app.bughunter.databinding.QuestionItemBinding
 
-class StackOverflowQuestionsAdapter(questions: List<StackOverflowQuestions>, var onClick: (item: StackOverflowQuestions) -> Unit) :
+class StackOverflowQuestionsAdapter( questions: List<StackOverflowQuestions>, var onClick: (item: StackOverflowQuestions) -> Unit) :
     RecyclerView.Adapter<StackOverflowQuestionsAdapter.ItemViewHolder>() {
     var questionsList = questions
 

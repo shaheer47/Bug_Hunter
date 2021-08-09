@@ -123,6 +123,7 @@ class BottomSheetForAnswerFragment : BottomSheetDialogFragment() {
                 question?.question_id!!,
                 answerDescription,
                 0,
+                user?.user_photo!!,
                 System.currentTimeMillis().toString(),
                 System.currentTimeMillis().toString(),
                 user?.userId.toString(),

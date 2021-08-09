@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.bytesbridge.app.bughunter.activities.ui.activities.LoginActivity
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
@@ -79,7 +80,7 @@ class SettingFragment : Fragment() {
             binding.tvCoins.text = user.hunterCoins.toString()
             binding.tvHunts.text = user.helpfulHunts.toString()
             binding.tvQuestionAsk.text = user.numOfQuestionAsked.toString()
-
+            Glide.with(requireContext()).load(user.user_photo).into(binding.img)
             binding.btn.setOnClickListener {
                 Toast.makeText(context, "Logout", Toast.LENGTH_SHORT).show()
             }

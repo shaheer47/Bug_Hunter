@@ -6,7 +6,7 @@ import java.io.Serializable
 
 data class StackOverflowQuestionResponse(
 
-    @SerializedName("items") val items: List<StackOverflowQuestions>,
+    @SerializedName("items") var items: ArrayList<StackOverflowQuestions> = ArrayList(),
     @SerializedName("has_more") val has_more: Boolean,
     @SerializedName("quota_max") val quota_max: Int,
     @SerializedName("quota_remaining") val quota_remaining: Int
@@ -40,5 +40,7 @@ data class StackOverflowQuestions(
     @SerializedName("question_id") val question_id: Int,
     @SerializedName("link") val link: String,
     @SerializedName("closed_reason") val closed_reason: String,
-    @SerializedName("title") val title: String
+    @SerializedName("title") val title: String,
+    @SerializedName("type") val type: Int=0,
+    @SerializedName("coins_offer") val coins_offer: Long=0
 ):Serializable

@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.ui.data.models.AnswerModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
@@ -45,9 +46,9 @@ class AnswersAdapter(var onClick: (item: AnswerModel) -> Unit) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val answer = differ.currentList[position] as AnswerModel
         holder.binding.apply {
+            Glide.with(root.context).load(answer.user_image).placeholder(R.drawable.ic_baseline_person_24).into(img)
             tvName.text = answer.answer_user_name
             answerDescription.text = answer.answer_detail
-
             tvTime.text = PrettyTimeAgo.getTimeAgo(answer.created_at.toLong())
 
             if ((answer.hunter_coins_rewarded <= 0 && answer.question_user_id != user?.userId) || answer.answer_user_id == user?.userId) {

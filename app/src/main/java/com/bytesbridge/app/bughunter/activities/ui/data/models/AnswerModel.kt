@@ -7,6 +7,7 @@ data class AnswerModel(
     val question_id: String = "",
     val answer_detail: String = "",
     var hunter_coins_rewarded: Long = 0,
+    var user_image: String="",
     val created_at: String = "",
     val updated_at: String = "",
     val answer_user_id: String = "",

@@ -29,6 +29,7 @@ class Constants {
         const val FIREBASE_NUMBER_OF_ANSWERS = "numberOfAnswers"
         const val FIREBASE_NUMBER_OF_QUESTIONS_ASKED = "numberOfQuestions"
         const val FIREBASE_NUMBER_OF_SUCCESSFUL_HUNTS = "numberOfSuccessfulHunts"
+        const val FIREBASE_QUESTION_TITLE_FOR_SEARCH = "question_title_for_search"
 
         const val MY_QUESTIONS=0
         const val ALL_QUESTIONS=1

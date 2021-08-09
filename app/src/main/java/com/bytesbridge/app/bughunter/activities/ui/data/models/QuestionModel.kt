@@ -13,5 +13,6 @@ data class QuestionModel(
     val user_id: String = "",
     var views: Long = 0,
     var question_title_for_search: String = "",
-    val question_user_name: String = ""
+    val question_user_name: String = "",
+    val question_user_photo: String = ""
 ) : Serializable

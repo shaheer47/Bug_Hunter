@@ -41,6 +41,16 @@
                 app:argType="com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestions"
                 app:nullable="false" />
         </action>
+        <action
+            android:id="@+id/action_searchFragment_to_answersListFragment"
+            app:destination="@id/answersListFragment">
+            <argument
+                android:name="question"
+                app:argType="com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel"
+                app:nullable="false" />
+        </action>
+
+
     </fragment>
 
     <fragment

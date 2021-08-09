@@ -9,6 +9,7 @@ import com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowAnswersResponse
 import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestionResponse
+import com.bytesbridge.app.bughunter.activities.ui.data.models.responces.StackOverflowQuestions
 import com.bytesbridge.app.bughunter.activities.ui.repository.Repository
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.STACK_OVERFLOW
 import java.io.File
@@ -56,7 +57,8 @@ class MainViewModel
         }
     }
 
-     fun getAnswersFromStackOverflow(
+
+    fun getAnswersFromStackOverflow(
         title: Int,
         response: (stackOverflowAnswersResponse: StackOverflowAnswersResponse?) -> Unit
     ) {
@@ -70,6 +72,7 @@ class MainViewModel
             message(it)
         }
     }
+
     fun submitAnswer(answer: AnswerModel, message: (msg: String) -> Unit) {
         repository.submitAnswer(answer) {
             message(it)
@@ -108,13 +111,14 @@ class MainViewModel
     }
 
     fun rewardAnswer(answer: AnswerModel, function: () -> Unit) {
-        repository.rewardHunterCoins(answer){
+        repository.rewardHunterCoins(answer) {
             function()
         }
     }
-    fun upLoadImage(uid:String, file: Uri, success:(success:Boolean)->Unit){
-        repository.uploadImageToFirebase(uid,file,success)
+
+    fun upLoadImage(uid: String, file: Uri, success: (success: Boolean) -> Unit) {
+        repository.uploadImageToFirebase(uid, file, success)
     }
-   
+
 
 }

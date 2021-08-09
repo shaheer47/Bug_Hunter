@@ -8,6 +8,7 @@ data class UserModel(
     var numOfQuestionAsked: Long = 0,
     var numberOfAnswers: Long = 0,
     var hunterCoins: Long = 0,
+    var user_photo: String = "",
     var helpfulHunts: Long = 0,
     var createdAt: String = "",
     var UpdatedAt: String = "",
