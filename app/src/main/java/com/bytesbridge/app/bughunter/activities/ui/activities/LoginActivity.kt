@@ -10,7 +10,8 @@ import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.ui.data.models.LoginModel
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.AuthViewModel
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
-import com.bytesbridge.app.bughunter.activities.utils.SnackbarUtil
+import com.bytesbridge.app.bughunter.activities.utils.LoadingUtils.Companion.loadingEnd
+import com.bytesbridge.app.bughunter.activities.utils.LoadingUtils.Companion.loadingStart
 import com.bytesbridge.app.bughunter.activities.utils.SnackbarUtil.Companion.showSnackBar
 import com.bytesbridge.app.bughunter.databinding.ActivityLoginBinding
 
@@ -45,7 +46,8 @@ class LoginActivity : AppCompatActivity() {
             }
 
             btnLogin.setOnClickListener {
-                if (!etPassword.text.isNullOrEmpty()) {
+                if (!etPassword.text.isNullOrEmpty() && !etEmail.text.isNullOrEmpty()) {
+                    loadingStart(binding.btnLogin,binding.progress)
                     etPassword.error = null
                     authViewModel.login(
                         LoginModel(
@@ -54,6 +56,8 @@ class LoginActivity : AppCompatActivity() {
                         )
                     )
                     { loginSuccess, message, userData ->
+                        loadingEnd("Login",binding.btnLogin,binding.progress)
+
                         if (loginSuccess && userData != null) {
                             mainViewModel.saveUserDataLocally(this@LoginActivity, userData)
                             showSnackBar(binding.root, message)
@@ -68,11 +72,14 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    etPassword.error = getString(R.string.empty_passord_field_error)
+                    if (etPassword.text.isNullOrEmpty()) {
+                        etPassword.error = getString(R.string.empty_passord_field_error)
+                    } else if (etEmail.text.isNullOrEmpty()) {
+                        etEmail.error = getString(R.string.empty_email_field_error)
+                    }
+
                 }
             }
         }
-
-
     }
 }

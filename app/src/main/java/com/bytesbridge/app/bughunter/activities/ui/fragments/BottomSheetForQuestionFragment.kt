@@ -20,6 +20,7 @@ import com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
 import com.bytesbridge.app.bughunter.activities.utils.AlertDialogUtils.Companion.showDialog
+import com.bytesbridge.app.bughunter.activities.utils.LoadingUtils
 import com.bytesbridge.app.bughunter.activities.utils.SnackbarUtil.Companion.showSnackBar
 import com.bytesbridge.app.bughunter.databinding.FragmentBottomSheetForQuestionBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -102,9 +103,7 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
             cardSend.setOnClickListener {
 
                 checkValidation() {
-                    showDialog(
-                        requireContext(),
-                        context?.resources?.getString(R.string.question_submission_message)!!
+                    showDialog(requireContext(),context?.resources?.getString(R.string.question_submission_message)!!
                     ) { addCoins ->
                         if (!addCoins) {
                             prepareQuestion()
@@ -116,8 +115,11 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
     }
 
     private fun prepareQuestion() {
-        val coins = binding.etHunterCoins.text.toString().toLong()
-        val questionModel: QuestionModel =
+        var coins = 0L
+        if (!binding.etHunterCoins.text.isNullOrEmpty()) {
+            coins = binding.etHunterCoins.text.toString().toLong()
+        }
+        val questionModel =
             QuestionModel(
                 UUID.randomUUID().toString(),
                 "0",
@@ -130,7 +132,7 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
                 0,
                 "",
                 user?.userName!!,
-                user?.user_photo!!
+                user?.user_image!!
 
             )
         sendQuestion(questionModel)
@@ -142,7 +144,7 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
                 questionTitle = etQuestionTitle.text.toString().trim()
                 questionDescription = etQuestionDescription.text.toString().trim()
                 if (questionTitle.length > 1) {
-                    if (questionDescription.length > 1) {
+                    if (questionDescription.isNotEmpty()) {
                         goodToGo(true)
                     } else {
                         etQuestionDescription.error = "Please Add more details"
@@ -163,7 +165,10 @@ class BottomSheetForQuestionFragment : BottomSheetDialogFragment() {
     }
 
     private fun sendQuestion(question: QuestionModel) {
+        LoadingUtils.loadingStart(binding.cardSend, binding.progress)
+
         mainViewModel.submitQuestion(question) { message ->
+            LoadingUtils.loadingEnd("Send",binding.cardSend, binding.progress)
             dismiss()
             closeKeyBoard()
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

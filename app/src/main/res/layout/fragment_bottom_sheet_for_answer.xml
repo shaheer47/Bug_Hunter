@@ -21,8 +21,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical">
+                 android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/rl_header"
@@ -36,26 +35,40 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_baseline_close_24" />
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/card_send"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
-                        app:cardBackgroundColor="@color/primary"
-                        app:cardCornerRadius="@dimen/_8sdp"
                         tools:ignore="RelativeOverlap">
 
-                        <TextView
-                            android:id="@+id/tv_answer_text"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/card_send"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingStart="@dimen/_16sdp"
-                            android:paddingTop="@dimen/_8sdp"
-                            android:paddingEnd="@dimen/_16sdp"
-                            android:paddingBottom="@dimen/_8sdp"
+                            android:layout_alignParentEnd="true"
                             android:text="@string/answer"
-                            android:textStyle="bold" />
-                    </com.google.android.material.card.MaterialCardView>
+                            app:cardBackgroundColor="@color/primary"
+                            app:cardCornerRadius="@dimen/_8sdp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="RelativeOverlap" />
+
+
+                        <ProgressBar
+                            android:id="@+id/progress"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:elevation="@dimen/_24sdp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </RelativeLayout>
 
                 <ScrollView
@@ -75,12 +88,11 @@
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/til_description"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/_16sdp"
                             android:layout_marginEnd="20dp"
                             android:elevation="0dp"
-                            app:boxBackgroundColor="@color/white"
-                            app:boxBackgroundMode="none"
+                             app:boxBackgroundMode="none"
                             app:hintEnabled="false">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -88,6 +100,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:completionThreshold="0"
+                                android:gravity="top"
                                 android:hint="@string/add_your_answer_here"
                                 android:padding="@dimen/_16sdp"
                                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />

@@ -17,11 +17,16 @@ class PaperDbUtils {
         }
 
         fun user(context: Context): UserModel? {
-            if (currentUser == null) {
-                Paper.init(context)
-                currentUser = Paper.book().read("user", null)
-            }
+
+            Paper.init(context)
+            currentUser = Paper.book().read("user", null)
+
             return currentUser
+        }
+
+        fun clearData(context: Context) {
+            Paper.init(context)
+            Paper.book().delete("user")
         }
 
     }

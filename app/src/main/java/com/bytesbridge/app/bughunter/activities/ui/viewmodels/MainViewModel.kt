@@ -116,7 +116,7 @@ class MainViewModel
         }
     }
 
-    fun upLoadImage(uid: String, file: Uri, success: (success: Boolean) -> Unit) {
+    fun upLoadImage(uid: String, file: Uri, success: (success: Boolean,uri:Uri?) -> Unit) {
         repository.uploadImageToFirebase(uid, file, success)
     }
 

@@ -22,6 +22,7 @@ import com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel
 import com.bytesbridge.app.bughunter.activities.ui.data.models.UserModel
 import com.bytesbridge.app.bughunter.activities.ui.viewmodels.MainViewModel
 import com.bytesbridge.app.bughunter.activities.utils.Constants.Companion.Question
+import com.bytesbridge.app.bughunter.activities.utils.LoadingUtils
 import com.bytesbridge.app.bughunter.activities.utils.SnackbarUtil.Companion.showSnackBar
 import com.bytesbridge.app.bughunter.databinding.FragmentBottomSheetForAnswerBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -123,7 +124,7 @@ class BottomSheetForAnswerFragment : BottomSheetDialogFragment() {
                 question?.question_id!!,
                 answerDescription,
                 0,
-                user?.user_photo!!,
+                user?.user_image!!,
                 System.currentTimeMillis().toString(),
                 System.currentTimeMillis().toString(),
                 user?.userId.toString(),
@@ -158,8 +159,10 @@ class BottomSheetForAnswerFragment : BottomSheetDialogFragment() {
     }
 
     private fun answerQuestion(question: AnswerModel) {
+        LoadingUtils.loadingStart(binding.cardSend, binding.progress)
 
         mainViewModel.submitAnswer(question) { message ->
+            LoadingUtils.loadingEnd("Answer",binding.cardSend, binding.progress)
             dismiss()
             closeKeyBoard()
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()

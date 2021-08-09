@@ -27,6 +27,7 @@ import com.bytesbridge.app.bughunter.activities.utils.PaperDbUtils
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -56,7 +57,12 @@ class Repository
     private var userLiveData: MutableLiveData<FirebaseUser?> = MutableLiveData()
     private var loggedOutLiveData: MutableLiveData<Boolean?> = MutableLiveData()
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private val settings = FirebaseFirestoreSettings.Builder().setCacheSizeBytes(1 * 1024 * 1024).build()
 
+    init {
+        dbFireStore.firestoreSettings = settings
+
+    }
 //    val remote = Remote(iBackendApiStackOverflow, iBackendApiSearch)
 
     inner class Remote
@@ -65,6 +71,7 @@ class Repository
     {
         //---------------- Search ----------------//
         fun searchQuery(query: String, questionTitle: (questionTitle: String?) -> Unit) {
+
 
             RetrofitInstance.searchApi.searchQuestion("$query stack overflow")
                 .enqueue(object : Callback<SearchResponse> {
@@ -121,7 +128,7 @@ class Repository
                             if (questionResponse.isSuccessful && questionResponse.code() == 200) {
                                 getQuestionFromFirestoreWithTitle(title) { listOfQuestion ->
                                     listOfQuestion?.let {
-                                        response_.items = it
+                                        response_.items.addAll(it)
                                         response(questionResponse.body())
                                     } ?: run {
                                         response(questionResponse.body())
@@ -172,16 +179,18 @@ class Repository
     }
 
     //---------------- Auth ----------------//
-    fun uploadImageToFirebase(uId: String, file: Uri, success: (success: Boolean) -> Unit) {
+    fun uploadImageToFirebase(
+        uId: String,
+        file: Uri,
+        success: (success: Boolean, uri: Uri?) -> Unit
+    ) {
         val storageRef: StorageReference = fireStorage.reference.child("$uId.jpg")
         var task: UploadTask = storageRef.putFile(file)
-
 
         val urlTask = task.continueWithTask { _task ->
             if (!_task.isSuccessful) {
                 _task.exception?.let {
-                    success(false)
-
+                    success(false, null)
                     throw it
                 }
             }
@@ -190,16 +199,15 @@ class Repository
             if (task_.isSuccessful) {
                 val downloadUri = task_.result
                 addUserImage(downloadUri, uId)
-                success(true)
+                success(true, downloadUri)
             } else {
-                success(false)
+                success(false, null)
                 // ...
             }
         }
     }
 
     private fun addUserImage(downloadUri: Uri, uId: String) {
-        Log.e("TAG", "addUserImage: " + downloadUri.toString())
         dbFireStore.collection(PATH_FIREBASE_USERS).document(uId)
             .update(FIREBASE_USER_IMAGE, downloadUri.toString())
     }
@@ -213,7 +221,7 @@ class Repository
                 .addOnCompleteListener { task ->
                     task.let {
                         if (task.isSuccessful) {
-                            var userModel = UserModel(
+                            val userModel = UserModel(
                                 task.result.user?.uid!!,
                                 signUpModel.userName,
                                 signUpModel.name,
@@ -226,22 +234,17 @@ class Repository
                                 System.currentTimeMillis().toString(),
                                 System.currentTimeMillis().toString()
                             )
-
-                            coroutineScope.launch {
-                                addUserDataToFireStore(userModel) { status, message ->
-                                    launch(Dispatchers.Main) {
-                                        if (status) {
-                                            userCreated(
-                                                true,
-                                                message
-                                            )
-                                        } else {
-                                            userCreated(
-                                                false,
-                                                message
-                                            )
-                                        }
-                                    }
+                            addUserDataToFireStore(userModel) { status, message ->
+                                if (status) {
+                                    userCreated(
+                                        true,
+                                        message
+                                    )
+                                } else {
+                                    userCreated(
+                                        false,
+                                        message
+                                    )
                                 }
                             }
                         } else {
@@ -521,7 +524,11 @@ class Repository
                 .whereEqualTo(FIREBASE_USER_ID, userId).get()
                 .addOnSuccessListener { documents ->
                     for (doc in documents) {
-                        questionList.add(doc.toObject(QuestionModel::class.java))
+                        val questionObj = doc.toObject(QuestionModel::class.java)
+                        userPhotoById(questionObj.user_id) { photo ->
+                            questionObj.question_user_photo = photo
+                            questionList.add(questionObj)
+                        }
                     }
                     questionsListCallback(questionList)
                 }.addOnFailureListener {
@@ -531,7 +538,11 @@ class Repository
             dbFireStore.collection(PATH_FIREBASE_QUESTIONS).get()
                 .addOnSuccessListener { documents ->
                     for (doc in documents) {
-                        questionList.add(doc.toObject(QuestionModel::class.java))
+                        val questionObj = doc.toObject(QuestionModel::class.java)
+                        userPhotoById(questionObj.user_id) { photo ->
+                            questionObj.question_user_photo = photo
+                            questionList.add(questionObj)
+                        }
                     }
                     questionsListCallback(questionList)
                 }.addOnFailureListener {
@@ -546,7 +557,12 @@ class Repository
         dbFireStore.collection(PATH_FIREBASE_ANSWERS).whereEqualTo(FIREBASE_QUESTION_ID, questionId)
             .get().addOnSuccessListener { documents ->
                 for (doc in documents) {
-                    answersList.add(doc.toObject(AnswerModel::class.java))
+                    var answerObj = doc.toObject(AnswerModel::class.java)
+                    userPhotoById(answerObj.answer_user_id) { img ->
+                        answerObj.user_image = img
+                        answersList.add(answerObj)
+                    }
+
                 }
                 viewIncrease(questionId)
                 answer(answersList)
@@ -575,6 +591,20 @@ class Repository
     private fun sendAddCoinsToUser(userId: String, coins: Long) {
         dbFireStore.collection(PATH_FIREBASE_USERS).document(userId)
             .update(FIREBASE_HUNTER_COINS, FieldValue.increment(coins))
+
+    }
+
+    private fun userPhotoById(userId: String, image: (userImage: String) -> Unit) {
+        dbFireStore.collection(PATH_FIREBASE_USERS).document(userId).get().addOnSuccessListener {
+            var user: UserModel? = it.toObject(UserModel::class.java)
+
+            user?.let {
+                image(user.user_image)
+
+            } ?: run {
+                image("")
+            }
+        }
 
     }
 

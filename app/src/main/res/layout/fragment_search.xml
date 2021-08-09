@@ -43,37 +43,62 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
-                    <carbon.widget.TextView
-                        android:id="@+id/tv_search_with_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:clickable="true"
-                        android:drawableStart="@drawable/ic_search_24"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:padding="@dimen/_10sdp"
-                        android:text="@string/search_error"
-                        app:carbon_rippleColor="@color/carbon_red_700"
-                        app:carbon_rippleStyle="background"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/textView1" />
+                        app:layout_constraintEnd_toStartOf="@+id/textView1">
 
-                    <carbon.widget.TextView
-                        android:id="@+id/tv_search_with_photo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        <ProgressBar
+                            android:id="@+id/progress_search"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:visibility="gone" />
+
+                        <carbon.widget.TextView
+                            android:id="@+id/tv_search_with_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:drawableStart="@drawable/ic_search_24"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:padding="@dimen/_10sdp"
+                            android:text="@string/search_error"
+                            app:carbon_rippleColor="@color/carbon_red_700"
+                            app:carbon_rippleStyle="background"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:clickable="true"
-                        android:drawableStart="@drawable/ic_camera_alt_24"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:padding="@dimen/_10sdp"
-                        android:text="@string/search_with_photo"
-                        app:carbon_rippleColor="@color/carbon_red_700"
-                        app:carbon_rippleStyle="background"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/editText" />
+                        app:layout_constraintEnd_toEndOf="@+id/editText"
+                        app:layout_constraintEnd_toStartOf="@+id/textView1">
+
+                        <ProgressBar
+                            android:id="@+id/progress_img"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:visibility="gone" />
+
+                        <carbon.widget.TextView
+                            android:id="@+id/tv_search_with_photo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:drawableStart="@drawable/ic_camera_alt_24"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:padding="@dimen/_10sdp"
+                            android:text="@string/search_with_photo"
+                            app:carbon_rippleColor="@color/carbon_red_700"
+                            app:carbon_rippleStyle="background"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+                    </RelativeLayout>
                 </LinearLayout>
             </carbon.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -88,6 +113,17 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView"
             tools:itemCount="3"
             tools:listitem="@layout/question_item" />
+
+        <TextView
+            android:id="@+id/tv_no_questions"
+            android:layout_width="wrap_content"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:text="@string/search_or_take_photo_of_your_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import carbon.dialog.ProgressDialog
 import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.adapters.QuestionsAdapter
 import com.bytesbridge.app.bughunter.activities.ui.data.models.QuestionModel
@@ -45,23 +46,25 @@ class QuestionsFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     }
 
     private fun getData() {
+
+        val progress = ProgressDialog(requireContext())
+        progress.setTitle("Loading Questions")
+        progress.setText("Wait while questions are loading...")
+        progress.setCancelable(false) // disable dismiss by tapping outside of the dialog
+        progress.show()
         mainViewModel.getQuestions(type) { questions ->
+            if(questions.isNullOrEmpty()){
+                binding.tvNoQuestions.visibility=View.GONE
+            }
+            else{
+                binding.tvNoQuestions.visibility=View.VISIBLE
+            }
+            progress.dismiss()
             questionsList = questions
             questions?.let {
                 binding.rvQuestions.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                 questionAdapter = QuestionsAdapter(it) { questionModel ->
-//                    arguments = Bundle().apply {
-//                        putSerializable(Constants.Question, questionModel)
-//                    }
-//                    val navOptions =
-//                        NavOptions.Builder().setPopUpTo(R.id.questionsFragment, true).build()
-//                    Navigation.findNavController(requireView()).navigate(
-//                        R.id.action_searchFragment_to_StackOverflowAnswersListFragment,
-//                        arguments,
-//                        navOptions
-//                    )
-
                     val action =
                         HomeFragmentDirections.actionHomeFragmentToAnswersListFragment(questionModel)
                     findNavController().navigate(action)

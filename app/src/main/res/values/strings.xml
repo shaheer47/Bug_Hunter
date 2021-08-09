@@ -35,8 +35,9 @@
     <string name="answer_dummy">In your code you are trying to get the status of service from Activity. The correct way is that status should be given by the service.  There are several possibilities for an activity to communicate with a service and vice versa. As you are using Broadcast receiver so you can broadcast a message in onHandleIntent() method when the service started.</string>
     <string name="user_creation_success">User Created Successfully</string>
     <string name="empty_passord_field_error">Password field Can\'t be empty</string>
+    <string name="empty_email_field_error">Email field Can\'t be empty</string>
     <string name="skip_login">Skip Login</string>
-    <string name="search_error">Search Error</string>
+    <string name="search_error">Search</string>
     <string name="search_with_photo">Search With Photo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -50,11 +51,14 @@
     <string name="bug">bug</string>
     <string name="helpful_hunts">Helpful Hunts</string>
     <string name="no_answers_yet">No Answers yet</string>
-    <string name="question_submission_message">\"Adding hunter coins can encourage hunter to hunt your Bug. Want to add some hunter coins?\"</string>
+    <string name="question_submission_message">\"Adding more hunter coins can encourage hunter to hunt your Bug. Want to add some hunter coins?\"</string>
     <string name="send_coins_message">"Are you sure want to reward this hunt for %1$s Hunter coins?"</string>
     <string name="not_enough_coins">Not Enough Coins notify admin for more coins</string>
     <string name="add_your_answer_here">Add your answer here</string>
     <string name="bug_hunter">Bug Hunter</string>
     <string name="jhon_smith">Jhon Smith</string>
     <string name="log_out">Logout</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="no_question_yet">No Question Yet</string>
+    <string name="search_or_take_photo_of_your_error">Search or take photo of your error</string>
 </resources>

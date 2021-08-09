@@ -38,8 +38,6 @@
                         android:id="@+id/collapsing_toolbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#fff"
-                        app:contentScrim="@color/black"
                         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                         <View

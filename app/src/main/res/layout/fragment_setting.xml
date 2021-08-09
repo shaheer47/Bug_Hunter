@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".SettingFragment">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,7 +12,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/VeryLightGrey"
             android:orientation="vertical"
             tools:context="com.demotxt.droidsrce.profileui.MainActivity">
 
@@ -19,7 +19,6 @@
                 android:id="@+id/ll_user_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/VeryLightGrey"
                 android:orientation="vertical"
                 tools:context="com.demotxt.droidsrce.profileui.MainActivity">
 
@@ -33,13 +32,31 @@
                         android:background="@drawable/gradient"
                         android:orientation="vertical">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/img"
+                        <RelativeLayout
                             android:layout_width="150dp"
                             android:layout_height="150dp"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="45dp"
-                            android:src="@drawable/ic_photo_black_48dp" />
+                            android:layout_marginTop="45dp">
+
+                            <ProgressBar
+                                android:visibility="gone"
+                                android:id="@+id/progress"
+                                android:elevation="@dimen/_24sdp"
+                                android:indeterminate="true"
+                                android:indeterminateTint="@color/white"
+                                android:indeterminateTintMode="src_atop"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true" />
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/img"
+                                android:layout_width="150dp"
+                                android:layout_height="150dp"
+                                android:layout_gravity="center_horizontal"
+                                android:src="@drawable/ic_baseline_insert_photo_24" />
+                        </RelativeLayout>
+
 
                         <TextView
                             android:id="@+id/tv_user_name"

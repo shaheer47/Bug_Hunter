@@ -1,5 +1,4 @@
 package com.bytesbridge.app.bughunter.activities.adapters
-
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import carbon.dialog.ProgressDialog
 import com.bumptech.glide.Glide
 import com.bytesbridge.app.bughunter.R
 import com.bytesbridge.app.bughunter.activities.adapters.AnswersAdapter
@@ -111,7 +112,13 @@ class AnswersListFragment : Fragment(), AppBarLayout.OnOffsetChangedListener {
     }
 
     private fun getAnswers() {
+        val progress = ProgressDialog(requireContext())
+        progress.setTitle("Loading Answers")
+        progress.setText("Wait while answers are loading...")
+        progress.setCancelable(false) // disable dismiss by tapping outside of the dialog
+        progress.show()
         mainViewModel.getAnswers(question.question_id) { ansList ->
+            progress.dismiss()
             ansList?.let {
                 if (it.size > 0) {
                     binding.tvNoAnswers.visibility = View.GONE
